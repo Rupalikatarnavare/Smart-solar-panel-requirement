@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Residential Solar Calculator</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+   background-image: url("register_bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+}
+.container {
+    width: 650px;
+    margin: 40px auto;
+    background: #f7f2f2b4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h2 {
+    text-align: center;
+    color: #0d1453;
+}
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background: #3944df;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover {
+    background: #3b667a;
+}
+.result {
+    margin-top: 20px;
+    background: #e8f5e9;
+    padding: 12px;
+    border-radius: 5px;
+}
+.suggestion {
+    margin-top: 15px;
+    background: #e8f5e9;
+    padding: 14px;
+    border-left: 5px solid #183244;
+    border-radius: 5px;
+}
+small {
+    color: #555;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>🏠 Residential Solar Calculator</h2>
+
+<!-- Mandatory Inputs -->
+<label>Monthly Electricity Usage (kWh) *</label>
+<input type="number" id="units" placeholder="e.g. 350">
+
+<label>OR Monthly Electricity Bill (₹) *</label>
+<input type="number" id="bill" placeholder="e.g. 2100">
+<small>Tariff assumed: ₹6 per unit</small>
+
+<label>Solar Panel Wattage (W) *</label>
+<input type="number" id="panel" placeholder="e.g. 400">
+
+<hr>
+
+<!-- Optional Inputs -->
+<label>Roof Area Available (sq.m)</label>
+<input type="number" id="roofArea" placeholder="e.g. 50">
+
+<label>Peak Sun Hours</label>
+<input type="number" id="sun" value="4.5">
+
+<label>System Efficiency</label>
+<select id="efficiency">
+    <option value="0.80">High Efficiency (80%)</option>
+    <option value="0.75" selected>Standard (75%)</option>
+    <option value="0.70">Low Efficiency (70%)</option>
+</select>
+
+<button onclick="calculateSolar()">Calculate</button>
+
+<div class="result" id="output"></div>
+<div class="suggestion" id="suggestionBox" style="display:none;"></div>
+
+<!-- Back to Home button outside suggestion box -->
+<button onclick="window.location.href='index.html';" style="margin-top:20px;">⬅ Back to Home</button>
+
+</div>
+
+<script>
+function calculateSolar() {
+    // Inputs
+    let units = parseFloat(document.getElementById("units").value);
+    let bill = parseFloat(document.getElementById("bill").value);
+    let panelWatt = parseFloat(document.getElementById("panel").value);
+    let roofArea = parseFloat(document.getElementById("roofArea").value);
+    let sunHours = parseFloat(document.getElementById("sun").value);
+    let efficiency = parseFloat(document.getElementById("efficiency").value);
+
+    // Mandatory check
+    if ((!units && !bill) || isNaN(panelWatt) || panelWatt <= 0) {
+        alert("Please enter electricity info AND panel wattage (mandatory)!");
+        return;
+    }
+
+    // Calculate monthly units if only bill provided
+    let monthlyUnits = !isNaN(units) && units > 0 ? units : bill / 6;
+
+    // Energy & solar system calculation
+    let dailyEnergy = monthlyUnits / 30; // kWh/day
+    let adjustedEnergy = dailyEnergy / efficiency;
+    let solarKW = adjustedEnergy / sunHours;
+
+    // Number of panels required
+    let panelsRequired = Math.ceil((solarKW * 1000) / panelWatt);
+
+    // Suggested panel type and description
+    let panelType, panelDescription;
+    if (solarKW <= 3) {
+        panelType = "Mono PERC";
+        panelDescription = "Good for small homes or low power needs. Cost-effective and efficient.";
+    } else if (solarKW <= 6) {
+        panelType = "Mono PERC (Residential)";
+        panelDescription = "High efficiency panels ideal for medium-sized homes. Reliable output for appliances and AC.";
+    } else if (solarKW <= 10) {
+        panelType = "TOPCon";
+        panelDescription = "Advanced technology panels suitable for larger homes. High efficiency, long-term durability.";
+    } else {
+        panelType = "Bifacial TOPCon";
+        panelDescription = "Premium panels capturing sunlight from both sides. Ideal for very large homes or small residential complexes.";
+    }
+
+    // Estimated roof area needed
+    let panelAreaPerKW = 90; // sq.m per 1 kW typical for residential
+    let totalAreaSqm = solarKW * panelAreaPerKW;
+    let totalAreaAcres = totalAreaSqm / 4047;
+    let totalAreaHectares = totalAreaSqm / 10000;
+
+    // Output results
+    document.getElementById("output").innerHTML = `
+        <b>Results:</b><br>
+        ⚡ Monthly Energy Usage: <b>${monthlyUnits.toFixed(0)} kWh</b><br>
+        ☀️ Required Solar System Size: <b>${solarKW.toFixed(2)} kW</b><br>
+        🔋 Panel Wattage Provided: <b>${panelWatt} W</b><br>
+        🏠 Roof Area Available: ${isNaN(roofArea) ? "Not provided" : roofArea + " sq.m"}<br>
+    `;
+
+    // Suggestion box
+    document.getElementById("suggestionBox").style.display = "block";
+    document.getElementById("suggestionBox").innerHTML = `
+        <b>💡 Panel Recommendation:</b><br>
+        ✔ Suggested Panel Type: <b>${panelType}</b><br>
+        ✔ Description: ${panelDescription}<br>
+        ✔ Number of Panels Required: <b>${panelsRequired}</b><br>
+        ✔ Estimated Roof Area Needed for Panels: <br>
+        &nbsp;&nbsp;• ${totalAreaSqm.toFixed(1)} sq.m<br>
+        &nbsp;&nbsp;• ${totalAreaAcres.toFixed(2)} acres<br>
+        &nbsp;&nbsp;• ${totalAreaHectares.toFixed(2)} hectares
+    `;
+
+    // Optional warning if roof area is less than required
+    if (!isNaN(roofArea) && roofArea < totalAreaSqm) {
+        document.getElementById("suggestionBox").innerHTML += `<br><b style="color:red;">⚠️ Warning: Roof area may be insufficient for this system!</b>`;
+    }
+}
+</script>
+
+</body>
+</html>
+<!-- When we install a solar panel system, not all the sunlight hitting the panels is converted into usable electricity. Some energy is lost due to various factors: -->

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Get Consultation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #5290a7c7;
+            background-image: url("register_bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            width: 800px;
+            margin: 40px auto;
+            background: #dae6f0a8;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(243, 229, 229, 0.1);
+
+        }
+
+        h2 {
+            text-align: center;
+            color: #0d47a1;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #e6eaf0;
+            color: rgb(113, 183, 240);
+            border: none;
+            margin-top: 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #07367f;
+        }
+
+        .back-btn {
+            width: auto;
+            background-color: #607d8b;
+            padding: 6px 12px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .back-btn:hover {
+            background-color: #455a64;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" >
+
+        <!-- Back Button -->
+        <button class="back-btn" onclick="goHome()">⬅ Back to Home</button>
+
+        <h2>📩 Get Consultation</h2>
+
+        <label>Full Name *</label>
+        <input type="text" id="name" placeholder="Your Name">
+
+        <label>Email Address *</label>
+        <input type="email" id="email" placeholder="you@example.com">
+
+        <label>Phone Number</label>
+        <input type="text" id="phone" placeholder="Optional">
+
+        <!-- <label>Company / Organization</label>
+    <input type="text" id="company" placeholder="Optional"> -->
+
+        <label>Type of Installation</label>
+        <select id="type">
+            <option value="residential">Residential</option>
+            <option value="agriculture">Agriculture</option>
+            <option value="industrial">Industrial</option>
+            <option value="commercial">Commercial / Public</option>
+        </select>
+
+        <label>Estimated Electricity Usage (kWh / month)</label>
+        <input type="number" id="usage" placeholder="Optional">
+
+        <label>Available Area (sq.m)</label>
+        <input type="number" id="area" placeholder="Optional">
+
+        <label>Preferred Panel Type</label>
+        <select id="panel">
+            <option value="any">Any</option>
+            <option value="mono">Mono PERC</option>
+            <option value="topcon">TOPCon</option>
+            <option value="bifacial">Bifacial</option>
+        </select>
+
+        <label>Message / Requirements</label>
+        <textarea id="message" rows="4" placeholder="Tell us more..."></textarea>
+
+        <button onclick="submitForm()">Submit Request</button>
+
+    </div>
+
+    <script>
+        function submitForm() {
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+
+            if (!name || !email) {
+                alert("Please fill in your name and email!");
+                return;
+            }
+
+            alert("Thank you, " + name + "! Your request has been submitted.");
+
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("phone").value = "";
+            <!-- document.getElementById("company").value = ""; -->
+            document.getElementById("type").value = "residential";
+            document.getElementById("usage").value = "";
+            document.getElementById("area").value = "";
+            document.getElementById("panel").value = "any";
+            document.getElementById("message").value = "";
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+    </script>
+
+</body>
+
+</html>

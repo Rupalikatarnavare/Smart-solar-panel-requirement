@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agriculture Solar Calculator</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+   background-image: url("register_bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+}
+.container {
+    width: 650px;
+    margin: 40px auto;
+    background: #f7f2f2b4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h2 {
+    text-align: center;
+    color: #0d1453;
+}
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background: #3944df;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover {
+    background: #3b667a;
+}
+.result {
+    margin-top: 20px;
+    background: #e8f5e9;
+    padding: 12px;
+    border-radius: 5px;
+}
+.suggestion {
+    margin-top: 15px;
+    background: #e8f5e9;
+    padding: 14px;
+    border-left: 5px solid #183244;
+    border-radius: 5px;
+}
+small {
+    color: #555;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>🌞 Agriculture Solar Calculator</h2>
+
+<!-- ELECTRICITY (MANDATORY) -->
+<label>Monthly Electricity Units (kWh) *</label>
+<input type="number" id="units" placeholder="e.g. 1200">
+
+<label>OR Monthly Electricity Bill (₹) *</label>
+<input type="number" id="bill" placeholder="e.g. 7200">
+<small>Tariff assumed: ₹6 per unit</small>
+
+<hr>
+
+<!-- OPTIONAL AGRICULTURE INFO -->
+<label>Land Area (Acres) – Optional</label>
+<input type="number" id="land" placeholder="e.g. 5">
+
+<hr>
+
+<!-- SOLAR PARAMETERS -->
+<label>Peak Sun Hours</label>
+<input type="number" id="sun" value="5.5">
+
+<label>System Efficiency</label>
+<select id="efficiency">
+    <option value="0.80">DC Pump (80%)</option>
+    <option value="0.75" selected>AC Pump (75%)</option>
+    <option value="0.70">Low Efficiency (70%)</option>
+</select>
+
+<label>Solar Panel Wattage (W) – Mandatory</label>
+<input type="number" id="panel" placeholder="e.g. 550">
+
+<button onclick="calculateSolar()">Calculate</button>
+
+<div class="result" id="output"></div>
+<div class="suggestion" id="suggestionBox" style="display:none;"></div>
+<button onclick="window.location.href='index.html';" style="margin-top:20px;">⬅ Back to Home</button>
+
+</div>
+
+<script>
+function calculateSolar() {
+    let units = parseFloat(document.getElementById("units").value);
+    let bill = parseFloat(document.getElementById("bill").value);
+    let land = parseFloat(document.getElementById("land").value);
+    let sunHours = parseFloat(document.getElementById("sun").value);
+    let efficiency = parseFloat(document.getElementById("efficiency").value);
+    let panelWatt = parseFloat(document.getElementById("panel").value);
+
+    // Mandatory check
+    if ((!units && !bill) || isNaN(panelWatt) || panelWatt <= 0) {
+        alert("Please enter electricity info AND panel wattage (mandatory)!");
+        return;
+    }
+
+    // Calculate monthly units if bill provided
+    let monthlyUnits = !isNaN(units) && units > 0 ? units : bill / 6;
+
+    // Energy & solar system calculation
+    let dailyEnergy = monthlyUnits / 30; // kWh/day
+    let adjustedEnergy = dailyEnergy / efficiency;
+    let solarKW = adjustedEnergy / sunHours;
+
+    // Number of panels
+    let panelsRequired = Math.ceil((solarKW * 1000) / panelWatt);
+
+    // Panel type & description suggestion
+    let panelType, panelDescription;
+    if (solarKW <= 3) {
+        panelType = "Mono PERC";
+        panelDescription = "Good for small farms or low power needs. Cost-effective and efficient for sunny regions.";
+    } else if (solarKW <= 6) {
+        panelType = "Mono PERC (Best for Agriculture)";
+        panelDescription = "High efficiency panels ideal for medium-sized farms. Reliable output for irrigation and farm equipment.";
+    } else if (solarKW <= 10) {
+        panelType = "TOPCon";
+        panelDescription = "Advanced technology panels suitable for larger farms. Offers higher efficiency and long-term durability.";
+    } else {
+        panelType = "Bifacial TOPCon (Large Farms)";
+        panelDescription = "Premium panels capturing sunlight from both sides. Ideal for large agricultural setups with maximum output needs.";
+    }
+
+    // Calculate land requirement
+    // Each 1 kW requires ~90 sq.m
+    let totalAreaSqm = solarKW * 90;
+    let totalAreaAcres = totalAreaSqm / 4047;
+    let totalAreaHectares = totalAreaSqm / 10000;
+
+    // Display results
+    document.getElementById("output").innerHTML = `
+        <b>Results:</b><br>
+        ⚡ Monthly Energy Usage: <b>${monthlyUnits.toFixed(0)} kWh</b><br>
+        ☀️ Required Solar System Size: <b>${solarKW.toFixed(2)} kW</b><br>
+        🔋 Panel Wattage Provided: <b>${panelWatt} W</b><br>
+        🌾 Land Area (Optional Input): ${isNaN(land) ? "Not provided" : land + " acres"}<br>
+    `;
+
+    // Display suggestion box
+    document.getElementById("suggestionBox").style.display = "block";
+    document.getElementById("suggestionBox").innerHTML = `
+        <b>💡 Panel Recommendation:</b><br>
+        ✔ Suggested Panel Type: <b>${panelType}</b><br>
+        ✔ Description: ${panelDescription}<br>
+        ✔ Number of Panels Required: <b>${panelsRequired}</b><br>
+        ✔ Estimated Land Area Needed for Panels: <br>
+        &nbsp;&nbsp;• ${totalAreaSqm.toFixed(1)} sq.m<br>
+        &nbsp;&nbsp;• ${totalAreaAcres.toFixed(2)} acres<br>
+        &nbsp;&nbsp;• ${totalAreaHectares.toFixed(2)} hectares
+    `;
+}
+</script>
+<!-- back to home button -->
+<div class="result" id="output"></div>
+<div class="suggestion" id="suggestionBox" style="display:none;"></div>
+
+<!-- Back to Home Button OUTSIDE the suggestion box -->
+<!-- <button onclick="window.location.href='index.html';" style="
+    width:100%;
+    padding:10px;
+    margin-top:20px;
+    background:#2e7d32;
+    color:white;
+    font-size:16px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+">⬅ Back to Home</button>
+back to home button -->
+
+
+</body>
+</html>

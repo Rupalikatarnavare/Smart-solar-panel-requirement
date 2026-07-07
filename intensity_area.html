@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Solar Information by Region</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eef5e9;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #2e7d32;
+  }
+
+  select {
+    padding: 8px;
+    margin: 10px;
+    font-size: 14px;
+  }
+
+  .output-box {
+    width: 80%;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 6px solid #4caf50;
+    display: none;
+  }
+
+  .output-box h3 {
+    color: #2e7d32;
+  }
+
+  .output-box ul {
+    margin-top: 10px;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>Solar Energy Information by Region</h2>
+
+<center>
+  <select id="state" onchange="updateRegions()">
+    <option value="">Select State</option>
+    <option value="Maharashtra">Maharashtra</option>
+    <option value="Rajasthan">Rajasthan</option>
+    <option value="Gujarat">Gujarat</option>
+    <option value="Karnataka">Karnataka</option>
+    <option value="Assam">Assam</option>
+    <option value="Odisha">Odisha</option>
+  </select>
+
+  <select id="region" onchange="showData()">
+    <option value="">Select Region</option>
+  </select>
+</center>
+
+<!-- OUTPUT BOX -->
+<div class="output-box" id="output">
+  <h3 id="location"></h3>
+  <ul id="resultList"></ul>
+</div>
+
+<script>
+const solarData = {
+  Maharashtra: {
+    Pune: { intensity: 5.5, hours: 6 },
+    Nagpur: { intensity: 6.0, hours: 7 }
+  },
+
+  Rajasthan: {
+    Jaipur: { intensity: 6.4, hours: 8 },
+    Jodhpur: { intensity: 6.7, hours: 8 }
+  },
+
+  Gujarat: {
+    Ahmedabad: { intensity: 6.1, hours: 7 },
+    Rajkot: { intensity: 6.3, hours: 7 }
+  },
+
+  Karnataka: {
+    Bangalore: { intensity: 5.8, hours: 6 },
+    Mysore: { intensity: 5.9, hours: 6 }
+  },
+
+  Assam: {
+    Guwahati: { intensity: 4.5, hours: 5 },
+    Silchar: { intensity: 4.7, hours: 5 }
+  },
+
+  Odisha: {
+    Bhubaneswar: { intensity: 5.0, hours: 5 },
+    Cuttack: { intensity: 5.1, hours: 5 }
+  }
+};
+
+// Update regions based on state
+function updateRegions() {
+  const state = document.getElementById("state").value;
+  const region = document.getElementById("region");
+  region.innerHTML = "<option value=''>Select Region</option>";
+
+  if (state && solarData[state]) {
+    for (let city in solarData[state]) {
+      let opt = document.createElement("option");
+      opt.value = city;
+      opt.text = city;
+      region.add(opt);
+    }
+  }
+
+  document.getElementById("output").style.display = "none";
+}
+
+// Show solar information
+function showData() {
+  const state = document.getElementById("state").value;
+  const region = document.getElementById("region").value;
+
+  if (!state || !region) return;
+
+  const data = solarData[state][region];
+
+  let panelType = "";
+  let bestUse = "";
+  let note = "";
+
+  if (data.intensity >= 6.3) {
+    panelType = "Bifacial / Monocrystalline Solar Panels";
+    bestUse = "Commercial and Industrial Projects";
+    note = "Very high solar potential suitable for large-scale plants.";
+  } 
+  else if (data.intensity >= 5.6) {
+    panelType = "Monocrystalline Solar Panels";
+    bestUse = "Residential and Commercial Use";
+    note = "Good sunlight availability throughout the year.";
+  } 
+  else {
+    panelType = "Polycrystalline Solar Panels";
+    bestUse = "Small Residential Installations";
+    note = "Moderate solar potential suitable for small systems.";
+  }
+
+  document.getElementById("location").innerText =
+    "Location: " + region + ", " + state;
+
+  document.getElementById("resultList").innerHTML = `
+    <li><b>Solar Intensity:</b> ${data.intensity} kWh/m²/day</li>
+    <li><b>Peak Sun Hours:</b> ${data.hours} hours per day</li>
+    <li><b>Recommended Panel Type:</b> ${panelType}</li>
+    <li><b>Best Suitable For:</b> ${bestUse}</li>
+    <li><b>Additional Note:</b> ${note}</li>
+  `;
+
+  document.getElementById("output").style.display = "block";
+}
+</script>
+
+</body>
+</html>

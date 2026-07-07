@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SunScale - Solar Potential Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <div class="bg-blur"></div>
+
+
+  <header class="navbar">
+    
+   
+  </header>
+   <h1 class="page-title">Smart Solar Panel Requirement Analyzer</h1>
+  <h2 class="section-title">Select Your Sector</h2>
+
+
+  <section class="category-section">
+  
+  <div class="category-box" onclick="window.location.href='test.html'" style="cursor:pointer">
+    <h3>🌾 Agriculture</h3>
+     <img src="https://tse3.mm.bing.net/th/id/OIP.ccii_S5V01sR6Zu4iVshagHaEJ?pid=Api&P=0&h=180" alt="Solar in Agriculture">
+    <p>Solar panels used for irrigation pumps, water supply, and farm operations.</p>
+  </div>
+
+  <div class="category-box" onclick="window.location.href='res.html'" style="cursor:pointer">
+    <h3>🏠 Residential</h3>
+    <img src="https://tse3.mm.bing.net/th/id/OIP.dSXI0Umt1pxeHcOW6riREAHaE8?pid=Api&P=0&h=180" alt="Residential Solar">
+    <p>Rooftop solar systems for homes to reduce electricity bills.</p>
+  </div>
+
+  <div class="category-box" onclick="window.location.href='ind.html'" style="cursor:pointer">
+    <h3>🏭 Industrial</h3>
+     <img src="https://tse2.mm.bing.net/th/id/OIP.PupcGtYluOSmDBq3UfbCZQHaHa?pid=Api&P=0&h=180" alt="Industrial  solar">
+    <p>High-capacity solar installations for factories and industries.</p>
+  </div>
+
+  <div class="category-box" onclick="window.location.href='com.html'" style="cursor:pointer">
+    <h3>🏢 Commercial & Public</h3>
+     <img src="https://tse1.mm.bing.net/th/id/OIP.v8l4M9qBjA80QZyuIZ7xgAHaFj?pid=Api&P=0&h=180" alt="commercial">
+         <p>Solar power for offices, hospitals, schools, and public buildings.</p>
+  </div>
+
+</section>
+
+<!-- Solar Panel Types Section -->
+<h2 class="section-title">Types of Solar Panels</h2>
+
+<section class="panel-types">
+
+  <div class="category-box" onclick="window.location.href='mono.html'" style="cursor:pointer;">
+    <h3>Monocrystalline</h3>
+    <p>High efficiency panels suitable for limited space and long-term use.</p>
+    <img src="https://tse4.mm.bing.net/th/id/OIP.6z8yDsDsRC_5ovzkJ7o_6wHaEs?pid=Api&P=0&h=180" alt="Monocrystalline solar panel">
+  </div>
+
+  <div class="category-box" onclick="window.location.href='poly.html'" style="cursor:pointer;">
+    <h3>Polycrystalline</h3>
+    <p>Cost-effective panels with moderate efficiency for homes and businesses.</p>
+    <img src="https://tse1.mm.bing.net/th/id/OIP.1dJCU8rUdy2aNVCiveaAHQHaHa?pid=Api&P=0&h=180"alt="Polycrystalline solar panel">
+  </div>
+
+  <div class="category-box" onclick="window.location.href='thin.html'" style="cursor:pointer;">
+    <h3>Thin-Film</h3>
+    <p>Lightweight and flexible panels ideal for large or curved surfaces.</p>
+    <img src="https://tse4.mm.bing.net/th/id/OIP.P-WAU7qYXtfZJZtb-A2FIgHaE8?pid=Api&P=0&h=180" alr="Thin-Flim solar panel">
+  </div>
+
+</section>
+<!-- Solar Intensity by Region -->
+<h2 class="section-title">Check Solar Intensity in Your Region</h2>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #000000, #1f1f1f);
+    padding: 20px;
+    background: url("image.png");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+
+  h2 {
+    text-align: center;
+    color: #d4d8e8;
+  }
+
+  select {
+    padding: 8px;
+    margin: 10px;
+    font-size: 14px;
+
+  }
+
+  .output-box {
+    width: 80%;
+    margin: 30px auto;
+     background: linear-gradient(to bottom, #468fcb, #e1dede);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 6px solid #252035;
+    display: none;
+  }
+
+  .output-box h3 {
+    color: #aea9bf;
+  }
+
+  .output-box ul {
+    margin-top:10px;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+</style>
+</head>
+
+<body>
+<center>
+  <select id="state" onchange="updateRegions()">
+    <option value="">Select State</option>
+    <option value="Maharashtra">Maharashtra</option>
+    <option value="Rajasthan">Rajasthan</option>
+    <option value="Gujarat">Gujarat</option>
+    <option value="Karnataka">Karnataka</option>
+    <option value="Assam">Assam</option>
+    <option value="Odisha">Odisha</option>
+    <option value="Kerala">Kerala</option>
+    <option value="Manipur">Manipur</option>
+    <option value="Punjab">Punjab</option>
+    <option value="Bihar">Bihar</option>
+    <option value="Sikkim">Sikkim</option>
+    <option value="Himachal Pradesh">Himachal Pradesh</option>
+    <option value="Telangana">Telangana</option>
+  </select>
+
+  <select id="region" onchange="showData()">
+    <option value="">Select Region</option>
+  </select>
+</center>
+
+<!-- OUTPUT BOX -->
+<div class="output-box" id="output">
+  <h3 id="location"></h3>
+  <ul id="resultList"></ul>
+</div>
+
+<script>
+const solarData = {
+  Maharashtra: {
+    Pune: { intensity: 5.5, hours: 6 },
+    Nagpur: { intensity: 6.0, hours: 7 }
+  },
+
+  Rajasthan: {
+    Jaipur: { intensity: 6.4, hours: 8 },
+    Jodhpur: { intensity: 6.7, hours: 8 }
+  },
+
+  Gujarat: {
+    Ahmedabad: { intensity: 6.1, hours: 7 },
+    Rajkot: { intensity: 6.3, hours: 7 }
+  },
+
+  Karnataka: {
+    Bangalore: { intensity: 5.8, hours: 6 },
+    Mysore: { intensity: 5.9, hours: 6 }
+  },
+
+  Assam: {
+    Guwahati: { intensity: 4.5, hours: 5 },
+    Silchar: { intensity: 4.7, hours: 5 }
+  },
+
+  Odisha: {
+    Bhubaneswar: { intensity: 5.0, hours: 5 },
+    Cuttack: { intensity: 5.1, hours: 5 }
+  },
+
+  Kerala: {
+    Thiruvananthapuram: { intensity: 4.8, hours: 5 },
+    Kochi: { intensity: 4.9, hours: 5 }
+  },
+
+  Manipur: {
+    Imphal: { intensity: 4.6, hours: 5 },
+    Thoubal: { intensity: 4.7, hours: 5 }
+  },
+
+  Punjab: {
+    Amritsar: { intensity: 5.2, hours: 6 },
+    Ludhiana: { intensity: 5.3, hours: 6 }
+  },
+
+  Bihar: {
+    Patna: { intensity: 5.1, hours: 6 },
+    Gaya: { intensity: 5.0, hours: 6 }
+  },
+
+  Sikkim: {
+    Gangtok: { intensity: 4.2, hours: 4 },
+    Namchi: { intensity: 4.3, hours: 4 }
+  },
+
+  "Himachal Pradesh": {
+    Shimla: { intensity: 4.8, hours: 5 },
+    Dharamshala: { intensity: 4.9, hours: 5 }
+  },
+
+  Telangana: {
+    Hyderabad: { intensity: 5.9, hours: 7 },
+    Warangal: { intensity: 6.0, hours: 7 }
+  }
+};
+
+function updateRegions() {
+  const state = document.getElementById("state").value;
+  const region = document.getElementById("region");
+  region.innerHTML = "<option value=''>Select Region</option>";
+
+  if (solarData[state]) {
+    for (let city in solarData[state]) {
+      let option = document.createElement("option");
+      option.value = city;
+      option.textContent = city;
+      region.appendChild(option);
+    }
+  }
+
+  document.getElementById("output").style.display = "none";
+}
+
+function showData() {
+  const state = document.getElementById("state").value;
+  const region = document.getElementById("region").value;
+  if (!state || !region) return;
+
+  const data = solarData[state][region];
+
+  let panelType, bestUse, note;
+
+  if (data.intensity >= 6.3) {
+    panelType = "Bifacial / Monocrystalline Panels";
+    bestUse = "Commercial & Industrial Projects";
+    note = "Very high solar potential.";
+  } else if (data.intensity >= 5.6) {
+    panelType = "Monocrystalline Panels";
+    bestUse = "Residential & Commercial Use";
+    note = "Good sunlight availability.";
+  } else {
+    panelType = "Polycrystalline Panels";
+    bestUse = "Small Residential Systems";
+    note = "Moderate solar potential.";
+  }
+
+  document.getElementById("location").textContent =
+    "Location: " + region + ", " + state;
+
+  document.getElementById("resultList").innerHTML = `
+    <li><b>Solar Intensity:</b> ${data.intensity} kWh/m²/day</li>
+    <li><b>Peak Sun Hours:</b> ${data.hours} hours/day</li>
+    <li><b>Recommended Panel:</b> ${panelType}</li>
+    <li><b>Best Suitable For:</b> ${bestUse}</li>
+    <li><b>Note:</b> ${note}</li>
+  `;
+
+  document.getElementById("output").style.display = "block";
+}
+</script>
+
+<!-- menu bar icon in the front page  -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        /* Menu Icon */
+        .menu-icon {
+            font-size: 16px;
+            cursor: pointer;
+            padding: 15px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #211d4b85;
+            color: white;
+        }
+
+        /* Profile Sidebar */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #478cacd5;
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+        }
+
+        .sidebar p {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 60px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Menu Icon -->
+<div class="menu-icon" onclick="openMenu()">☰</div>
+
+<!-- Sidebar Profile -->
+<div id="profileSidebar" class="sidebar">
+    <span class="close-btn" onclick="closeMenu()">×</span>
+    <h2>User Profile</h2>
+    <p><b>Name:</b> Ruchi</p>
+    <p><b>Email:</b> ruchi@gmail.com</p>
+    <p><b>Phone:</b> 9876543210</p>
+</div>
+
+<!-- Page Content -->
+<!-- <div class="content">
+    <h1>Welcome to Home Page</h1>
+    <p>This is your main content area.</p>
+</div> -->
+
+<script>
+    function openMenu() {
+        document.getElementById("profileSidebar").style.width = "190px";
+    }
+
+    function closeMenu() {
+        document.getElementById("profileSidebar").style.width = "0";
+    }
+</script>
+<!-- menu bar in front page  -->
+
+<title>Buy It Icon</title>
+<style>
+/* Floating Buy It icon */
+#buyIcon {
+    position: fixed;
+    right: 0px;           /* Distance from left */
+    top: 30px;             /* Vertical center */
+    transform: translateY(-50%);
+    background-color: #0d47a1;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    transition: background 0.3s, transform 0.2s;
+}
+#buyIcon:hover {
+    background-color: #07367f;
+    transform: translateY(-50%) scale(1.05);
+}
+#buyIcon i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+</style>
+<!-- Font Awesome for icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+
+  <section class="schemes-section">
+  <h2>Government Solar Energy Schemes</h2>
+  <p class="subtitle">
+    Explore major Government of India schemes that support solar panel installation and renewable energy adoption.
+  </p>
+
+  <div class="schemes-container">
+
+    <div class="scheme-card">
+      <h3>Pradhan Mantri Surya Ghar Muft Bijli Yojana</h3>
+      <p>
+        This scheme promotes rooftop solar installation for households by providing subsidies and up to 300 units of free electricity per month.
+      </p>
+      <a href="https://pmsuryaghar.gov.in/" target="_blank">Official Website</a>
+    </div>
+
+    <div class="scheme-card">
+      <h3>National Portal for Rooftop Solar</h3>
+      <p>
+        A centralized online portal for applying, tracking, and receiving subsidies for rooftop solar installations across India.
+      </p>
+      <a href="https://solarrooftop.pmsuryaghar.gov.in/" target="_blank">Official Website</a>
+    </div>
+
+    <div class="scheme-card">
+      <h3>Grid-Connected Rooftop Solar Programme (MNRE)</h3>
+      <p>
+        A government programme that provides financial assistance for grid-connected rooftop solar systems to increase clean energy usage.
+      </p>
+      <a href="https://mnre.gov.in/en/grid-connected-solar-rooftop-programme/" target="_blank">Official Website</a>
+    </div>
+
+    <div class="scheme-card">
+      <h3>PM-KUSUM Scheme</h3>
+      <p>
+        This scheme supports farmers by promoting solar water pumps and decentralized solar power plants to reduce diesel usage.
+      </p>
+      <a href="https://mnre.gov.in/en/pradhan-mantri-kisan-urja-suraksha-evam-utthaan-mahabhiyaan-pm-kusum/" target="_blank">
+        Official Website
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Floating Buy It Icon -->
+<div id="buyIcon" onclick="redirectToForm()">
+    <i class="fas fa-cart-plus"></i> Buy It
+</div>
+
+<script>
+function redirectToForm() {
+    // Redirect to your form page
+    window.location.href = "form.html"; // Replace with your actual form page
+}
+</script>
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-section">
+            <h3>☀ Solar Quote System</h3>
+            <p>
+                We help you estimate, plan, and request solar panel solutions
+                based on your energy needs, area, and installation type.
+            </p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="calculator.html">Solar Calculator</a></li>
+                <li><a href="Government.html">Government Sector</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </div>
+
+        <!-- <div class="footer-box govt-box">
+      <h3>Government Support</h3>
+      <p>✔ MNRE Approved</p>
+      <p>✔ PM Surya Ghar Yojana</p>
+      <p>✔ Net Metering Support</p>
+      <p>✔ State DISCOM Connectivity</p>
+    </div> -->
+
+        <div class="footer-section">
+            <h3>Contact Info</h3>
+            <p>📍 India</p>
+            <p>📞 +91 9XXXXXXXXX</p>
+            <p>✉ solarquote@email.com</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+    © <span id="year"></span> Solar Panel Calculator | Save Energy • Save Money • Save Earth 🌱
+  </div>
+</footer>
+<style>.footer {
+  background: linear-gradient(to right, #141414, #4c4f4e);
+
+    color: #ffffff;
+    margin-top: 20px;          /* reduced */
+    font-size: 13px;           /* slightly smaller text */
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 15px 20px;        /* reduced padding */
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    width: 30%;
+    min-width: 220px;          /* reduced */
+    margin-bottom: 10px;       /* reduced */
+}
+
+.footer-section h3 {
+    margin-bottom: 6px;        /* reduced */
+    font-size: 16px;           /* reduced */
+    color: #ffeb3b;
+}
+
+.footer-section p {
+    line-height: 1.4;          /* reduced */
+    margin-bottom: 6px;        /* reduced */
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 5px;        /* reduced */
+}
+
+.footer-section ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    background-color: #55585e7c;
+    text-align: center;
+    padding: 6px;              /* reduced */
+    font-size: 12px;
+}
+
+/* Government scheme text inside footer */
+.govt-box p {
+    border-radius: 6px;
+    margin-bottom: 6px;        /* reduced */
+    font-size: 13px;           /* reduced */
+    line-height: 1.4;
+}</style>
+
+
+  
+</body>
+
+
+</body>
+</html>
